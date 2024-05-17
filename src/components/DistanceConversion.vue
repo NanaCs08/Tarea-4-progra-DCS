@@ -8,7 +8,11 @@
       <label for="unit">Seleccione la unidad de conversión:</label>
       <select id="unit" v-model="selectedUnit">
         <option value="kilómetros">Kilómetros</option>
+        <option value="centímetros">Centímetros</option>
         <option value="millas">Millas</option>
+        <option value="yardas">Yardas</option>
+        <option value="pies">Pies</option>
+        <option value="pulgadas">Pulgadas</option>
       </select>
       
       <button @click="convert">Convertir</button>
@@ -31,10 +35,27 @@ export default {
   },
   methods: {
     convert() {
-      if (this.selectedUnit === 'kilómetros') {
-        this.convertedDistance = (this.inputDistance / 1000).toFixed(2);
-      } else if (this.selectedUnit === 'millas') {
-        this.convertedDistance = (this.inputDistance / 1609.34).toFixed(2);
+      switch (this.selectedUnit) {
+        case 'kilómetros':
+          this.convertedDistance = (this.inputDistance / 1000).toFixed(2);
+          break;
+        case 'centímetros':
+          this.convertedDistance = (this.inputDistance * 100).toFixed(2);
+          break;
+        case 'millas':
+          this.convertedDistance = (this.inputDistance / 1609.34).toFixed(2);
+          break;
+        case 'yardas':
+          this.convertedDistance = (this.inputDistance * 1.09361).toFixed(2);
+          break;
+        case 'pies':
+          this.convertedDistance = (this.inputDistance * 3.28084).toFixed(2);
+          break;
+        case 'pulgadas':
+          this.convertedDistance = (this.inputDistance * 39.3701).toFixed(2);
+          break;
+        default:
+          this.convertedDistance = this.inputDistance;
       }
     }
   }

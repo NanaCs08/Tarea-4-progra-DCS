@@ -2,11 +2,19 @@
   <div class="container">
     <h1>Conversiones de Temperatura</h1>
     <div class="card conversion-form">
-      <label for="temperature">Ingrese la temperatura en Celsius:</label>
+      <label for="temperature">Ingrese la temperatura:</label>
       <input type="number" id="temperature" v-model="inputTemperature">
 
-      <label for="unit">Seleccione la unidad de conversión:</label>
-      <select id="unit" v-model="selectedUnit">
+      <label for="fromUnit">Seleccione la unidad de origen:</label>
+      <select id="fromUnit" v-model="fromUnit">
+        <option value="Celsius">Celsius</option>
+        <option value="Fahrenheit">Fahrenheit</option>
+        <option value="Kelvin">Kelvin</option>
+      </select>
+
+      <label for="toUnit">Seleccione la unidad de conversión:</label>
+      <select id="toUnit" v-model="toUnit">
+        <option value="Celsius">Celsius</option>
         <option value="Fahrenheit">Fahrenheit</option>
         <option value="Kelvin">Kelvin</option>
       </select>
@@ -15,7 +23,7 @@
     </div>
     <div class="card result" v-if="convertedTemperature !== null">
       <p>Resultado:</p>
-      <p>{{ convertedTemperature }} °{{ selectedUnit }}</p>
+      <p>{{ convertedTemperature }} °{{ toUnit }}</p>
     </div>
   </div>
 </template>
@@ -26,16 +34,42 @@ export default {
     return {
       inputTemperature: null,
       convertedTemperature: null,
-      selectedUnit: 'Fahrenheit'
+      fromUnit: 'Celsius',
+      toUnit: 'Fahrenheit'
     };
   },
   methods: {
     convert() {
-      if (this.selectedUnit === 'Fahrenheit') {
-        this.convertedTemperature = (this.inputTemperature * 9/5) + 32;
-      } else if (this.selectedUnit === 'Kelvin') {
-        this.convertedTemperature = parseFloat(this.inputTemperature) + 273.15;
+      const temp = parseFloat(this.inputTemperature);
+      let result = null;
+
+      if (this.fromUnit === 'Celsius') {
+        if (this.toUnit === 'Fahrenheit') {
+          result = (temp * 9/5) + 32;
+        } else if (this.toUnit === 'Kelvin') {
+          result = temp + 273.15;
+        } else {
+          result = temp;
+        }
+      } else if (this.fromUnit === 'Fahrenheit') {
+        if (this.toUnit === 'Celsius') {
+          result = (temp - 32) * 5/9;
+        } else if (this.toUnit === 'Kelvin') {
+          result = (temp - 32) * 5/9 + 273.15;
+        } else {
+          result = temp;
+        }
+      } else if (this.fromUnit === 'Kelvin') {
+        if (this.toUnit === 'Celsius') {
+          result = temp - 273.15;
+        } else if (this.toUnit === 'Fahrenheit') {
+          result = (temp - 273.15) * 9/5 + 32;
+        } else {
+          result = temp;
+        }
       }
+
+      this.convertedTemperature = result.toFixed(2);
     }
   }
 }
@@ -119,4 +153,3 @@ button:hover {
   font-weight: bold;
 }
 </style>
-
